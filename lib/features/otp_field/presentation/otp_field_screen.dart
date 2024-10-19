@@ -9,7 +9,7 @@ class OtpFieldScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyDimens().getNormalAppBar("OTP Page", [], context),
+      appBar: MyDimens().getNormalAppBar("OTP Page", [], context, true),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,

@@ -11,12 +11,13 @@ class LoadingPercentScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: MyDimens().getNormalAppBar("Loading Percent", [], context),
+      appBar: MyDimens().getNormalAppBar("Loading Percent", [], context, true),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(12),
           child: SingleChildScrollView(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _getHorizontalVerticalLoading(
                   type: LoadingType.horizontal,
@@ -61,8 +62,8 @@ class LoadingPercentScreen extends StatelessWidget {
         color: backColor,
       ),
       child: Container(
-        height: indicatorHeightPercent,
-        width: indicatorWidthPercent,
+        height: 20, //indicatorHeightPercent,
+        width: 20, // indicatorWidthPercent,
         alignment: indicatorAlignment,
         // constraints: BoxConstraints.expand(),
         decoration: BoxDecoration(
