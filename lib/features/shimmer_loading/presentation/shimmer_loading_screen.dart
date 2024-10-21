@@ -11,7 +11,7 @@ class ShimmerLoadingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(title: const Text("Shimmer Screen"), centerTitle: true),
+      appBar: MyDimens().getNormalAppBar("Shimmer Loading", [], context, true),
       body: SafeArea(
         child: ShimmerloadingCard(
           height: 95,
