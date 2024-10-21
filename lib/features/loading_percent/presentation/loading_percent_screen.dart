@@ -58,10 +58,7 @@ class _LoadingPercentScreenState extends State<LoadingPercentScreen>
                     indicatorGradientColor: LinearGradient(
                       begin: Alignment.bottomLeft,
                       end: Alignment.topRight,
-                      colors: [
-                        MyColor.bluePrimary,
-                        MyColor.bluePrimary.withOpacity(0.4)
-                      ],
+                      colors: [MyColor.skyPrimary, MyColor.skySecondary],
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -89,6 +86,7 @@ class _LoadingPercentScreenState extends State<LoadingPercentScreen>
     required double height,
     required double width,
     required double loadingPercent,
+    double borderRadius = 12,
     Color indicatorColor = MyColor.skyPrimary,
     Color backColor = MyColor.inActiveColor,
   }) =>
@@ -98,7 +96,7 @@ class _LoadingPercentScreenState extends State<LoadingPercentScreen>
             height: height,
             width: width,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(borderRadius),
               gradient: SweepGradient(
                 stops: [_getPercent(1, loadingPercent), 0],
                 colors: [indicatorColor, backColor],
@@ -107,7 +105,7 @@ class _LoadingPercentScreenState extends State<LoadingPercentScreen>
             child: Container(
               margin: EdgeInsets.all(5),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(borderRadius),
                 color: Colors.white,
               ),
               child: Center(child: Text(_getExactPercent(loadingPercent))),
@@ -152,7 +150,7 @@ class _LoadingPercentScreenState extends State<LoadingPercentScreen>
     Gradient indicatorGradientColor = const LinearGradient(
       begin: Alignment.bottomLeft,
       end: Alignment.topRight,
-      colors: [MyColor.skyPrimary, MyColor.inActiveColor],
+      colors: [MyColor.skyPrimary, MyColor.skySecondary],
     ),
   }) {
     bool isHorizontal = type == LoadingType.horizontal;
