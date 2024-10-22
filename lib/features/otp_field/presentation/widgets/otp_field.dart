@@ -64,6 +64,7 @@ class _OtpFieldState extends State<OtpField> {
                     child: _getOtpField(
                       cntrl: _otpControllerList[i],
                       currentFocus: _otpFocusList[i],
+                      // if it's last otp-field then we don't need nextFocus
                       nextFocus: isLastItem ? null : _otpFocusList[i + 1],
                     ),
                   ),
@@ -99,6 +100,7 @@ class _OtpFieldState extends State<OtpField> {
           nextFocus == null ? TextInputAction.done : TextInputAction.next,
       textAlign: TextAlign.center,
       style: const TextStyle(height: 0),
+      // setiing maximum length of each field is 1
       inputFormatters: [LengthLimitingTextInputFormatter(1)],
       decoration: InputDecoration(
         contentPadding: EdgeInsets.symmetric(vertical: 20),
@@ -138,6 +140,7 @@ class _OtpFieldState extends State<OtpField> {
         if (value == null || value.isEmpty) return '';
         return null;
       },
+      // if user press somewhere but on textfield then keyboard & focus dismissed
       onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
     );
   }
