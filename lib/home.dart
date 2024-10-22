@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:packages_app/features/device_info/presentation/device_info_screen.dart';
 import 'package:packages_app/features/loading_percent/presentation/loading_percent_screen.dart';
 import 'package:packages_app/features/otp_field/presentation/otp_field_screen.dart';
 import 'package:packages_app/features/shimmer_loading/presentation/shimmer_loading_screen.dart';
@@ -42,6 +43,14 @@ class Home extends StatelessWidget {
                           builder: (_) => LoadingPercentScreen()));
                 },
                 child: Text("Loading Percent Package"),
+              ),
+              const SizedBox(height: 15),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => DeviceInfoScreen()));
+                },
+                child: Text("Device-Battery info Package"),
               ),
             ],
           ),

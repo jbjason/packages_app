@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 
-class DeficeInfoScreen extends StatefulWidget {
-  const DeficeInfoScreen({super.key});
+class DeviceInfoScreen extends StatefulWidget {
+  const DeviceInfoScreen({super.key});
   @override
-  State<DeficeInfoScreen> createState() => _DeficeInfoScreenState();
+  State<DeviceInfoScreen> createState() => _DeviceInfoScreenState();
 }
 
-class _DeficeInfoScreenState extends State<DeficeInfoScreen> {
+class _DeviceInfoScreenState extends State<DeviceInfoScreen> {
   static const platform = MethodChannel('flutter.native/helper');
   String _deviceInfo = "Unknown";
 
