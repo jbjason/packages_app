@@ -18,6 +18,9 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
 
+import android.content.ContentResolver
+import android.provider.ContactsContract
+
 class MainActivity: FlutterActivity(){
     private val CHANNEL = "flutter.native/helper"
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -46,6 +49,9 @@ class MainActivity: FlutterActivity(){
                 }else{
                     result.error("Disconnected", "Internet is not available.", null)
                 }
+            }
+            else if (call.method == "getContactInfo"){
+                result.success(getContactInfo(this))
             }
             else {
                 result.notImplemented()
@@ -99,4 +105,24 @@ class MainActivity: FlutterActivity(){
             return networkInfo.isConnected
         }
     }
+
+    private fun getContactInfo(context: Context): String {
+        val names = ArrayList<List<String>>()
+        val cr = contentResolver
+        val cur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+            null, null, null)
+        if (cur!!.count > 0) {
+            while (cur.moveToNext()) {
+                val id = cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NAME_RAW_CONTACT_ID))
+                val name = cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME))
+                val number = cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                names.add(listOf(id, name, number))
+            }
+        }
+        return names.toString()
+    }
 }
+data class Contact(
+    val id : String ,
+    val name : String,
+    val number : String)

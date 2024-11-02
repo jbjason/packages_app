@@ -50,7 +50,7 @@ class Home extends StatelessWidget {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (_) => DeviceInfoScreen()));
                 },
-                child: Text("Device-Battery info Package"),
+                child: Text("Device-Battery-Contact info Package"),
               ),
             ],
           ),

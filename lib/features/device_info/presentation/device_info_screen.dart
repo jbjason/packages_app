@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:logger/logger.dart';
 import 'package:packages_app/core/util/mydimens.dart';
 
 enum DeviceInfoType { deviceInfo, battery }
@@ -47,6 +48,16 @@ class _DeviceInfoScreenState extends State<DeviceInfoScreen> {
     setState(() {});
   }
 
+  Future<void> _getContactInfo() async {
+    try {
+      await platform
+          .invokeMethod<String>('getContactInfo')
+          .then((val) => Logger().i(val));
+    } on PlatformException catch (e) {
+      Logger().e(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,6 +88,13 @@ class _DeviceInfoScreenState extends State<DeviceInfoScreen> {
             ElevatedButton(
               onPressed: () => _getNetworkInfo(),
               child: Text("Get Network Status"),
+            ),
+            MyDimens.cmDivider,
+            MyDimens.cmDivider,
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () => _getContactInfo(),
+              child: Text("Get Contact List"),
             ),
           ],
         ),
