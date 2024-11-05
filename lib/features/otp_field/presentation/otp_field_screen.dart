@@ -3,8 +3,14 @@ import 'package:packages_app/core/util/mydialog.dart';
 import 'package:packages_app/core/util/mydimens.dart';
 import 'package:packages_app/features/otp_field/presentation/widgets/otp_field.dart';
 
-class OtpFieldScreen extends StatelessWidget {
+class OtpFieldScreen extends StatefulWidget {
   const OtpFieldScreen({super.key});
+  @override
+  State<OtpFieldScreen> createState() => _OtpFieldScreenState();
+}
+
+class _OtpFieldScreenState extends State<OtpFieldScreen> {
+  String _otp = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,11 +21,20 @@ class OtpFieldScreen extends StatelessWidget {
         children: [
           OtpField(
             length: 4,
-            onSubmit: (val) {
-              MyDialog()
-                  .showSuccessToast(msg: "$val OTP matched", context: context);
-            },
+            onSubmit: (val) => setState(() => _otp = val),
           ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+              onPressed: () {
+                if (_otp == "1234") {
+                  MyDialog().showSuccessToast(
+                      msg: "$_otp OTP matched", context: context);
+                } else {
+                  MyDialog().showFailedToast(
+                      msg: "$_otp not matched matched", context: context);
+                }
+              },
+              child: Text("Submit")),
         ],
       ),
     );

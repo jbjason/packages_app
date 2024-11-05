@@ -73,8 +73,6 @@ class _OtpFieldState extends State<OtpField> {
             ),
           ),
         ),
-        const SizedBox(height: 20),
-        ElevatedButton(onPressed: _onSubmit, child: Text("Submit")),
       ],
     );
   }
@@ -132,6 +130,7 @@ class _OtpFieldState extends State<OtpField> {
         } else if (nextFocus == null) {
           // for last OTP-Field, we r removing focus automatically
           FocusManager.instance.primaryFocus?.unfocus();
+          _onSubmit();
         } else {
           FocusScope.of(context).canRequestFocus;
         }

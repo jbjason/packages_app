@@ -20,6 +20,7 @@ import android.os.Bundle
 
 import android.content.ContentResolver
 import android.provider.ContactsContract
+//import android.provider.MediaStore
 
 class MainActivity: FlutterActivity(){
     private val CHANNEL = "flutter.native/helper"
@@ -38,7 +39,7 @@ class MainActivity: FlutterActivity(){
             else if (call.method == "getBatteryInfo") {
                 val batteryLevel = getBatteryLevel()
                 if (batteryLevel != -1) {
-                    result.success(batteryLevel)
+                    result.success(batteryLevel.toString())
                 } else {
                     result.error("UNAVAILABLE", "Battery level not available.", null)
                 }
@@ -116,7 +117,12 @@ class MainActivity: FlutterActivity(){
                 val id = cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NAME_RAW_CONTACT_ID))
                 val name = cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME))
                 val number = cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
-                names.add(listOf(id, name, number))
+                val photo_uri = cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI))
+                //var photo = null;
+                //if(photo_uri !=null){
+                //    photo= MediaStore.Images.Media.getBitmap(cr,Uri.parse(photo_uri))
+                //}
+                names.add(listOf(id, name, number, photo_uri))
             }
         }
         return names.toString()

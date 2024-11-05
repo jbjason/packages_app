@@ -47,8 +47,11 @@ class Home extends StatelessWidget {
               const SizedBox(height: 15),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => DeviceInfoScreen()));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => DeviceInfoScreen(onSubmit: (_) {})),
+                  );
                 },
                 child: Text("Device-Battery-Contact info Package"),
               ),
