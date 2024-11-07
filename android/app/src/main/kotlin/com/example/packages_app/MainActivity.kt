@@ -29,12 +29,12 @@ class MainActivity: FlutterActivity(){
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
             call, result ->
             if (call.method == "getDeviceInfo") {
-                val deviceInfo = getDeviceInfo()
-                if (deviceInfo.isNotEmpty()) {
-                    result.success(deviceInfo)
-                } else {
-                    result.error("UNAVAILABLE", "Device info not available.", null)
-                }
+               // val deviceInfo = getDeviceInfo()
+              //  if (deviceInfo.isNotEmpty()) {
+                    result.success(getDeviceInfo(this))
+             //   } else {
+             //       result.error("UNAVAILABLE", "Device info not available.", null)
+              //  }
             }
             else if (call.method == "getBatteryInfo") {
                 val batteryLevel = getBatteryLevel()
@@ -77,7 +77,7 @@ class MainActivity: FlutterActivity(){
         }
         return batteryLevel
     }
-    private fun getDeviceInfo(): String {
+    private fun getDeviceInfo(context: Context):  String {
         val deviceInfo = HashMap<String, String>()
         deviceInfo["version"] = System.getProperty("os.version").toString()
         deviceInfo["device"] = android.os.Build.DEVICE
@@ -86,8 +86,9 @@ class MainActivity: FlutterActivity(){
         deviceInfo["manufacturer"] =  android.os.Build.MANUFACTURER
         deviceInfo["sdkVersion"] =  android.os.Build.VERSION.SDK_INT.toString()
         deviceInfo["id"] =  android.os.Build.ID
-
-        return deviceInfo.toString()
+        //return deviceInfo.toString()
+        return  (mutableListOf(deviceInfo["id"],deviceInfo["version"],deviceInfo["device"] ,deviceInfo["model"]
+                ,deviceInfo["product"],deviceInfo["manufacturer"],deviceInfo["sdkVersion"] )).toString()
     }
     private fun checkForInternet(context: Context): Boolean {
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -122,7 +123,7 @@ class MainActivity: FlutterActivity(){
                 //if(photo_uri !=null){
                 //    photo= MediaStore.Images.Media.getBitmap(cr,Uri.parse(photo_uri))
                 //}
-                names.add(listOf(id, name, number, photo_uri))
+                names.add(listOf(id.toString(), name.toString(), number.toString(),photo_uri))
             }
         }
         return names.toString()

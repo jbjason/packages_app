@@ -78,9 +78,9 @@ class _DeviceInfoScreenState extends State<DeviceInfoScreen> {
       default:
         null;
     }
-
     final result = await DeviceInfoProvider.getInfo(enumType, type);
-    Logger().t(result);
+
+    Logger().f(result);
   }
 
   // Future<void> _getDeviceInfo() async {

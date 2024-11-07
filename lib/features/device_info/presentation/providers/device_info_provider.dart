@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/services.dart';
+import 'package:logger/logger.dart';
 import 'package:packages_app/features/device_info/data/data_sources/device_info_source.dart';
 import 'package:packages_app/features/device_info/data/models/device_info.dart';
 import 'package:packages_app/features/device_info/data/models/device_info_contact.dart';
@@ -9,37 +12,73 @@ class DeviceInfoProvider {
   static Future<dynamic> getInfo(
       DeviceInfoTypeEnum enumType, String type) async {
     try {
-      await DeviceInfoRepo.platform.invokeMethod(type).then((val) {
-        developer.log(val!);
+      await DeviceInfoRepo.platform.invokeMethod(type).then((result) {
+        developer.log(result);
+        dynamic response;
         switch (enumType) {
           case DeviceInfoTypeEnum.deviceInfo:
             {
-              return DeviceInfo.fromJson(val);
+              Logger().i(result);
+              final item =
+                  result.toString().substring(1, result.toString().length - 1);
+              print(item);
+              final items = item.split(", ");
+              print(items);
+              Logger().t("""
+                id: ${items[0]},
+                version: ${items[1]},
+                device: ${items[2]},
+                model: ${items[3]},
+                product:${items[4]},
+                manufacturer: ${items[5]},
+                sdkVersion: ${items[6]},
+""");
+              response = DeviceInfo(
+                  id: items[0],
+                  version: items[1],
+                  device: items[2],
+                  model: items[3],
+                  product: items[4],
+                  manufacturer: items[5],
+                  sdkVersion: items[6]);
+              print(response.id);
+              print(response.version);
+              print(response.device);
+              print(response.model);
+              print(response.product);
+              print(response.manufacturer);
+              print(response.sdkVersion);
+              break;
             }
           case DeviceInfoTypeEnum.battery:
             {
-              return '$val%';
+              response = '$result%';
+              break;
             }
           case DeviceInfoTypeEnum.networkStatus:
             {
-              return val.toString();
+              response = result;
+              break;
             }
           case DeviceInfoTypeEnum.contactList:
             {
-              final List<DeviceInfoContact> contactList = [];
-              for (int i = 0; i < val.length; val++) {
-                contactList.add(
+              for (int i = 0; i < result.length; i++) {
+                response.add(
                   DeviceInfoContact(
-                    id: val[i][0],
-                    name: val[i][1],
-                    number: val[i][2],
-                    image: val[i][3],
+                    id: (result[i][0]).toString(),
+                    name: (result[i][1]).toString(),
+                    number: (result[i][2]).toString(),
+                    image: result[i][3]!.toString(),
                   ),
                 );
               }
-              return contactList;
+              break;
             }
+          default:
+            print("not Matched");
+            break;
         }
+        return response;
       });
     } on PlatformException catch (e) {
       return e.message!;
