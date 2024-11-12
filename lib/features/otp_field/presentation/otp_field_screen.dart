@@ -20,7 +20,7 @@ class _OtpFieldScreenState extends State<OtpFieldScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           OtpField(
-            length: 4,
+            length: 8,
             onSubmit: (val) => setState(() => _otp = val),
           ),
           const SizedBox(height: 20),

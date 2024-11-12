@@ -18,6 +18,8 @@ class _OtpFieldState extends State<OtpField> {
   final _otpController4 = TextEditingController();
   final _otpController5 = TextEditingController();
   final _otpController6 = TextEditingController();
+  final _otpController7 = TextEditingController();
+  final _otpController8 = TextEditingController();
   final List<TextEditingController> _otpControllerList = [];
   final _otpFocusNode1 = FocusNode();
   final _otpFocusNode2 = FocusNode();
@@ -25,6 +27,8 @@ class _OtpFieldState extends State<OtpField> {
   final _otpFocusNode4 = FocusNode();
   final _otpFocusNode5 = FocusNode();
   final _otpFocusNode6 = FocusNode();
+  final _otpFocusNode7 = FocusNode();
+  final _otpFocusNode8 = FocusNode();
   final List<FocusNode> _otpFocusList = [];
 
   @override
@@ -36,12 +40,16 @@ class _OtpFieldState extends State<OtpField> {
     _otpFocusList.add(_otpFocusNode4);
     _otpFocusList.add(_otpFocusNode5);
     _otpFocusList.add(_otpFocusNode6);
+    _otpFocusList.add(_otpFocusNode7);
+    _otpFocusList.add(_otpFocusNode8);
     _otpControllerList.add(_otpController1);
     _otpControllerList.add(_otpController2);
     _otpControllerList.add(_otpController3);
     _otpControllerList.add(_otpController4);
     _otpControllerList.add(_otpController5);
     _otpControllerList.add(_otpController6);
+    _otpControllerList.add(_otpController7);
+    _otpControllerList.add(_otpController8);
   }
 
   @override
@@ -152,12 +160,16 @@ class _OtpFieldState extends State<OtpField> {
     _otpFocusNode4.dispose();
     _otpFocusNode5.dispose();
     _otpFocusNode6.dispose();
+    _otpFocusNode7.dispose();
+    _otpFocusNode8.dispose();
     _otpController1.dispose();
     _otpController2.dispose();
     _otpController3.dispose();
     _otpController4.dispose();
     _otpController5.dispose();
     _otpController6.dispose();
+    _otpController7.dispose();
+    _otpController8.dispose();
     super.dispose();
   }
 }

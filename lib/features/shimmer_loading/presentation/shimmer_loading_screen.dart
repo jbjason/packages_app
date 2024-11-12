@@ -13,12 +13,21 @@ class ShimmerLoadingScreen extends StatelessWidget {
     return Scaffold(
       appBar: MyDimens().getNormalAppBar("Shimmer Loading", [], context, true),
       body: SafeArea(
-        child: ShimmerloadingCard(
-          height: 95,
-          width: size.width,
-          length: 7,
-          itemSeparateHeight: 20,
-          child: _getChild(size),
+        child: Column(
+          children: [
+            Container(height: 300, color: MyColor.skyPrimary),
+            ShimmerloadingCard(
+              itemHeight: 95,
+              length: 4,
+              itemSeparateHeightWidth: 20,
+              heightLightColor: Colors.greenAccent,
+              secondaryColor: Colors.green,
+              scrollDirection: Axis.vertical,
+              child: _getChild(size),
+            ),
+
+            // Container(height: 300, color: MyColor.skyPrimary),
+          ],
         ),
       ),
     );
@@ -27,6 +36,7 @@ class ShimmerLoadingScreen extends StatelessWidget {
   Widget _getChild(Size size) => Container(
         margin: const EdgeInsets.symmetric(horizontal: 12),
         padding: const EdgeInsets.all(10),
+        height: 95,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: MyColor.cardBackgroundColor,
@@ -70,23 +80,23 @@ class ShimmerloadingCard extends StatefulWidget {
   const ShimmerloadingCard(
       {super.key,
       required this.child,
-      required this.height,
-      required this.width,
-      this.startColor = Colors.white,
-      this.endColor = Colors.white38,
+      required this.itemHeight,
+      this.itemWidth,
+      this.heightLightColor = Colors.white,
+      this.secondaryColor = Colors.white38,
       this.length = 1,
-      this.itemSeparateHeight = 0,
-      this.itemSeparateWidth = 0,
-      this.scrollDirection = Axis.vertical});
+      this.itemSeparateHeightWidth = 0,
+      this.scrollDirection = Axis.vertical,
+      this.duration = const Duration(milliseconds: 1300)});
   final Widget child;
-  final double height;
-  final double width;
-  final Color startColor;
-  final Color endColor;
+  final double itemHeight;
+  final double? itemWidth;
+  final Color heightLightColor;
+  final Color secondaryColor;
   final int length;
-  final double itemSeparateHeight;
-  final double itemSeparateWidth;
+  final double itemSeparateHeightWidth;
   final Axis scrollDirection;
+  final Duration duration;
   @override
   State<ShimmerloadingCard> createState() => _ShimmerloadingCardState();
 }
@@ -95,37 +105,54 @@ class _ShimmerloadingCardState extends State<ShimmerloadingCard>
     with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Color?> _colorAnimation;
+  bool _isVerticalScroll = true;
+  double _shimmerItemWidth = 0;
   //final GlobalKey _sizeKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
     //WidgetsBinding.instance.addPostFrameCallback((_) => _getSize());
-    _controller = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 1000));
-    _colorAnimation = ColorTween(begin: widget.startColor, end: widget.endColor)
-        .animate(_controller);
+    _controller = AnimationController(vsync: this, duration: widget.duration);
+    _colorAnimation =
+        ColorTween(begin: widget.heightLightColor, end: widget.secondaryColor)
+            .animate(_controller);
     _controller.repeat();
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _isVerticalScroll = widget.scrollDirection == Axis.vertical;
+    _shimmerItemWidth = widget.itemWidth ?? MediaQuery.of(context).size.width;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      itemCount: widget.length,
-      scrollDirection: widget.scrollDirection,
-      shrinkWrap: true,
-      separatorBuilder: (_, __) => SizedBox(
-        height: widget.itemSeparateHeight,
-        width: widget.itemSeparateWidth,
-      ),
-      itemBuilder: (context, i) => SizedBox(
-        height: widget.height,
-        width: widget.width,
+    return _isVerticalScroll
+        ? SingleChildScrollView(
+            child: Column(
+                children: List.generate(widget.length, (i) => _getShimmeritem)),
+          )
+        : SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+                children: List.generate(widget.length, (i) => _getShimmeritem)),
+          );
+  }
+
+  Widget get _getShimmeritem => Container(
+        height: widget.itemHeight,
+        width: _shimmerItemWidth,
+        margin: EdgeInsets.only(
+          bottom: _isVerticalScroll ? widget.itemSeparateHeightWidth : 0,
+          right: _isVerticalScroll ? 0 : widget.itemSeparateHeightWidth,
+        ),
         child: Stack(
           children: [
             widget.child,
             Positioned(
-              left: 0,
+              left: 20,
               top: -100,
               bottom: -50,
               width: 120,
@@ -135,8 +162,8 @@ class _ShimmerloadingCardState extends State<ShimmerloadingCard>
                   alignment: Alignment.center,
                   transform: Matrix4.identity()
                     ..rotateZ(degree.radians(70))
-                    ..translate(widget.width * _controller.value,
-                        1 - (widget.width * _controller.value)),
+                    ..translate(_shimmerItemWidth * _controller.value,
+                        1 - (_shimmerItemWidth * _controller.value)),
                   child: Container(
                     decoration: BoxDecoration(
                       boxShadow: [
@@ -153,9 +180,7 @@ class _ShimmerloadingCardState extends State<ShimmerloadingCard>
             ),
           ],
         ),
-      ),
-    );
-  }
+      );
 
   // void _getSize() {
   //   RenderBox renderBox =
