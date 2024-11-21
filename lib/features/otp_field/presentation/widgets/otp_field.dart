@@ -86,7 +86,10 @@ class _OtpFieldState extends State<OtpField> {
   }
 
   void _onSubmit() {
-    if (!_formKey.currentState!.validate()) return;
+    if (!_formKey.currentState!.validate()) {
+      widget.onSubmit("");
+      return;
+    }
     String confirmedOTP = '';
     for (int i = 0; i < widget.length; i++) {
       confirmedOTP = [confirmedOTP, _otpControllerList[i].text].join();
@@ -148,7 +151,10 @@ class _OtpFieldState extends State<OtpField> {
         return null;
       },
       // if user press somewhere but on textfield then keyboard & focus dismissed
-      onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
+      onTapOutside: (_) {
+        FocusManager.instance.primaryFocus?.unfocus();
+        _onSubmit();
+      },
     );
   }
 
