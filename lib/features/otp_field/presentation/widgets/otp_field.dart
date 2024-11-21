@@ -3,9 +3,31 @@ import 'package:flutter/services.dart';
 import 'package:packages_app/core/util/mycolor.dart';
 
 class OtpField extends StatefulWidget {
-  const OtpField({super.key, required this.length, required this.onSubmit});
+  const OtpField({
+    super.key,
+    required this.length,
+    required this.onSubmit,
+    this.focusBorderWidth = .7,
+    this.focusBorderColor = MyColor.skyPrimary,
+    this.focusFillColor = MyColor.cardBackgroundColor,
+    this.unFocusBorderWidth = .3,
+    this.unFocusBorderColor = MyColor.inActiveColor,
+    this.unFocusFillColor = MyColor.cardBackgroundColor,
+    this.errorBorderWidth = 1,
+    this.errorBorderColor = Colors.red,
+    this.errorFillColor = MyColor.cardBackgroundColor,
+  });
   final int length;
   final Function(String val) onSubmit;
+  final double focusBorderWidth;
+  final Color focusBorderColor;
+  final Color focusFillColor;
+  final double unFocusBorderWidth;
+  final Color unFocusBorderColor;
+  final Color unFocusFillColor;
+  final double errorBorderWidth;
+  final Color errorBorderColor;
+  final Color errorFillColor;
   @override
   State<OtpField> createState() => _OtpFieldState();
 }
@@ -54,34 +76,28 @@ class _OtpFieldState extends State<OtpField> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Form(
-          key: _formKey,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: List.generate(
-              widget.length,
-              (i) {
-                final isLastItem = i == widget.length - 1;
-                return Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.only(right: isLastItem ? 0 : 8),
-                    child: _getOtpField(
-                      cntrl: _otpControllerList[i],
-                      currentFocus: _otpFocusList[i],
-                      // if it's last otp-field then we don't need nextFocus
-                      nextFocus: isLastItem ? null : _otpFocusList[i + 1],
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
+    return Form(
+      key: _formKey,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: List.generate(
+          widget.length,
+          (i) {
+            final isLastItem = i == widget.length - 1;
+            return Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(right: isLastItem ? 0 : 8),
+                child: _getOtpField(
+                  cntrl: _otpControllerList[i],
+                  currentFocus: _otpFocusList[i],
+                  // if it's last otp-field then we don't need nextFocus
+                  nextFocus: isLastItem ? null : _otpFocusList[i + 1],
+                ),
+              ),
+            );
+          },
         ),
-      ],
+      ),
     );
   }
 
@@ -116,23 +132,29 @@ class _OtpFieldState extends State<OtpField> {
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(12)),
-          borderSide: BorderSide(color: MyColor.skyPrimary, width: 2),
+          borderSide: BorderSide(
+              color: widget.focusBorderColor, width: widget.focusBorderWidth),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(12)),
-          borderSide: BorderSide(color: MyColor.inActiveColor, width: .3),
+          borderSide: BorderSide(
+              color: widget.unFocusBorderColor,
+              width: widget.unFocusBorderWidth),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(12)),
-          borderSide: BorderSide(color: Colors.red),
+          borderSide: BorderSide(
+              color: widget.errorBorderColor, width: widget.errorBorderWidth),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(12)),
-          borderSide: BorderSide(color: Colors.red),
+          borderSide: BorderSide(
+              color: widget.errorBorderColor, width: widget.errorBorderWidth),
         ),
         errorStyle: const TextStyle(height: 0),
       ),
       onChanged: (val) {
+        print("val -----------$val--------");
         if (val.isEmpty) {
           // if we remove a OTP-text, we may wanna stay on the same field, so doing nothing
         } else if (nextFocus != null) {
@@ -149,6 +171,7 @@ class _OtpFieldState extends State<OtpField> {
       validator: (value) {
         if (value == null || value.isEmpty) return '';
         return null;
+        //return null;
       },
       // if user press somewhere but on textfield then keyboard & focus dismissed
       onTapOutside: (_) {
