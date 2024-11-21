@@ -170,7 +170,6 @@ class _OtpFieldState extends State<OtpField> {
       validator: (value) {
         if (value == null || value.isEmpty) return '';
         return null;
-        //return null;
       },
       // if user press somewhere but on textfield then keyboard & focus dismissed
       onTapOutside: (_) {
