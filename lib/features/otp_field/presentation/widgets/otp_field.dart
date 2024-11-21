@@ -154,7 +154,6 @@ class _OtpFieldState extends State<OtpField> {
         errorStyle: const TextStyle(height: 0),
       ),
       onChanged: (val) {
-        print("val -----------$val--------");
         if (val.isEmpty) {
           // if we remove a OTP-text, we may wanna stay on the same field, so doing nothing
         } else if (nextFocus != null) {
