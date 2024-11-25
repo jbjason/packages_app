@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:packages_app/core/util/mydialog.dart';
 import 'package:packages_app/core/util/mydimens.dart';
 import 'package:packages_app/features/otp_field/presentation/widgets/otp_field.dart';
 
@@ -24,17 +23,7 @@ class _OtpFieldScreenState extends State<OtpFieldScreen> {
             onSubmit: (val) => setState(() => _otp = val),
           ),
           const SizedBox(height: 20),
-          ElevatedButton(
-              onPressed: () {
-                if (_otp == "1234") {
-                  MyDialog().showSuccessToast(
-                      msg: "$_otp OTP matched", context: context);
-                } else {
-                  MyDialog().showFailedToast(
-                      msg: "$_otp not matched matched", context: context);
-                }
-              },
-              child: Text("Submit")),
+          Text(_otp),
         ],
       ),
     );

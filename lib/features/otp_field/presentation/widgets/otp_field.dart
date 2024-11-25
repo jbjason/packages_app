@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:packages_app/core/util/mycolor.dart';
 
+enum OtpFiledShape { circular, underscore, square }
+
 class OtpField extends StatefulWidget {
   const OtpField({
     super.key,
@@ -16,6 +18,10 @@ class OtpField extends StatefulWidget {
     this.errorBorderWidth = 1,
     this.errorBorderColor = Colors.red,
     this.errorFillColor = MyColor.cardBackgroundColor,
+    this.shadowElevation = 0,
+    this.shodowColor = Colors.transparent,
+    this.hideText = true,
+    this.otpFiledShape = OtpFiledShape.circular,
   });
   final int length;
   final Function(String val) onSubmit;
@@ -28,12 +34,19 @@ class OtpField extends StatefulWidget {
   final double errorBorderWidth;
   final Color errorBorderColor;
   final Color errorFillColor;
+  final double shadowElevation;
+  final Color shodowColor;
+  final bool hideText;
+  final OtpFiledShape otpFiledShape;
   @override
   State<OtpField> createState() => _OtpFieldState();
 }
 
 class _OtpFieldState extends State<OtpField> {
   final _formKey = GlobalKey<FormState>();
+  InputBorder? _selectedFocusBorder;
+  InputBorder? _selectedUnFocusBorder;
+  InputBorder? _selectedErrorBorder;
   final _otpController1 = TextEditingController();
   final _otpController2 = TextEditingController();
   final _otpController3 = TextEditingController();
@@ -56,6 +69,7 @@ class _OtpFieldState extends State<OtpField> {
   @override
   void initState() {
     super.initState();
+    _getFieldShape();
     _otpFocusList.add(_otpFocusNode1);
     _otpFocusList.add(_otpFocusNode2);
     _otpFocusList.add(_otpFocusNode3);
@@ -72,6 +86,55 @@ class _OtpFieldState extends State<OtpField> {
     _otpControllerList.add(_otpController6);
     _otpControllerList.add(_otpController7);
     _otpControllerList.add(_otpController8);
+  }
+
+  void _getFieldShape() {
+    if (widget.otpFiledShape == OtpFiledShape.square) {
+      _selectedFocusBorder = OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+        borderSide: BorderSide(
+            color: widget.focusBorderColor, width: widget.focusBorderWidth),
+      );
+      _selectedUnFocusBorder = OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+        borderSide: BorderSide(
+            color: widget.unFocusBorderColor, width: widget.unFocusBorderWidth),
+      );
+      _selectedErrorBorder = OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+        borderSide: BorderSide(
+            color: widget.errorBorderColor, width: widget.errorBorderWidth),
+      );
+    } else if (widget.otpFiledShape == OtpFiledShape.circular) {
+      _selectedFocusBorder = OutlineInputBorder(
+        borderRadius: BorderRadius.circular(60),
+        borderSide: BorderSide(
+            color: widget.focusBorderColor, width: widget.focusBorderWidth),
+      );
+      _selectedUnFocusBorder = OutlineInputBorder(
+        borderRadius: BorderRadius.circular(60),
+        borderSide: BorderSide(
+            color: widget.unFocusBorderColor, width: widget.unFocusBorderWidth),
+      );
+      _selectedErrorBorder = OutlineInputBorder(
+        borderRadius: BorderRadius.circular(60),
+        borderSide: BorderSide(
+            color: widget.errorBorderColor, width: widget.errorBorderWidth),
+      );
+    } else {
+      _selectedFocusBorder = UnderlineInputBorder(
+        borderSide: BorderSide(
+            color: widget.focusBorderColor, width: widget.focusBorderWidth),
+      );
+      _selectedUnFocusBorder = UnderlineInputBorder(
+        borderSide: BorderSide(
+            color: widget.unFocusBorderColor, width: widget.unFocusBorderWidth),
+      );
+      _selectedErrorBorder = UnderlineInputBorder(
+        borderSide: BorderSide(
+            color: widget.errorBorderColor, width: widget.errorBorderWidth),
+      );
+    }
   }
 
   @override
@@ -113,69 +176,59 @@ class _OtpFieldState extends State<OtpField> {
     widget.onSubmit(confirmedOTP);
   }
 
-  TextFormField _getOtpField(
+  Widget _getOtpField(
       {required TextEditingController cntrl,
       required FocusNode currentFocus,
       FocusNode? nextFocus}) {
-    return TextFormField(
-      controller: cntrl,
-      focusNode: currentFocus,
-      keyboardType: TextInputType.number,
-      textInputAction:
-          nextFocus == null ? TextInputAction.done : TextInputAction.next,
-      textAlign: TextAlign.center,
-      style: const TextStyle(height: 0),
-      // setiing maximum length of each field is 1
-      inputFormatters: [LengthLimitingTextInputFormatter(1)],
-      decoration: InputDecoration(
-        contentPadding: EdgeInsets.symmetric(vertical: 20),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(12)),
-          borderSide: BorderSide(
-              color: widget.focusBorderColor, width: widget.focusBorderWidth),
+    return Material(
+      elevation: widget.shadowElevation,
+      color: Colors.transparent,
+      clipBehavior: Clip.none,
+      shadowColor: widget.shodowColor,
+      child: TextFormField(
+        controller: cntrl,
+        focusNode: currentFocus,
+        obscureText: widget.hideText, obscuringCharacter: "✶",
+        keyboardType: TextInputType.number,
+        textInputAction:
+            nextFocus == null ? TextInputAction.done : TextInputAction.next,
+        textAlign: TextAlign.center,
+        style: const TextStyle(height: 0),
+        // setiing maximum length of each field is 1
+        inputFormatters: [LengthLimitingTextInputFormatter(1)],
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.symmetric(vertical: 20),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          focusedBorder: _selectedFocusBorder,
+          enabledBorder: _selectedUnFocusBorder,
+          errorBorder: _selectedErrorBorder,
+          focusedErrorBorder: _selectedErrorBorder,
+          errorStyle: const TextStyle(height: 0),
         ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(12)),
-          borderSide: BorderSide(
-              color: widget.unFocusBorderColor,
-              width: widget.unFocusBorderWidth),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(12)),
-          borderSide: BorderSide(
-              color: widget.errorBorderColor, width: widget.errorBorderWidth),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(12)),
-          borderSide: BorderSide(
-              color: widget.errorBorderColor, width: widget.errorBorderWidth),
-        ),
-        errorStyle: const TextStyle(height: 0),
-      ),
-      onChanged: (val) {
-        if (val.isEmpty) {
-          // if we remove a OTP-text, we may wanna stay on the same field, so doing nothing
-        } else if (nextFocus != null) {
-          // goint to next-Field if it's not the last OTP-Field
-          FocusScope.of(context).nextFocus();
-        } else if (nextFocus == null) {
-          // for last OTP-Field, we r removing focus automatically
+        onChanged: (val) {
+          if (val.isEmpty) {
+            // if we remove a OTP-text, we may wanna stay on the same field, so doing nothing
+          } else if (nextFocus != null) {
+            // goint to next-Field if it's not the last OTP-Field
+            FocusScope.of(context).nextFocus();
+          } else if (nextFocus == null) {
+            // for last OTP-Field, we r removing focus automatically
+            FocusManager.instance.primaryFocus?.unfocus();
+            _onSubmit();
+          } else {
+            FocusScope.of(context).canRequestFocus;
+          }
+        },
+        validator: (value) {
+          if (value == null || value.isEmpty) return '';
+          return null;
+        },
+        // if user press somewhere but on textfield then keyboard & focus dismissed
+        onTapOutside: (_) {
           FocusManager.instance.primaryFocus?.unfocus();
           _onSubmit();
-        } else {
-          FocusScope.of(context).canRequestFocus;
-        }
-      },
-      validator: (value) {
-        if (value == null || value.isEmpty) return '';
-        return null;
-      },
-      // if user press somewhere but on textfield then keyboard & focus dismissed
-      onTapOutside: (_) {
-        FocusManager.instance.primaryFocus?.unfocus();
-        _onSubmit();
-      },
+        },
+      ),
     );
   }
 
