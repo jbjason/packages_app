@@ -1,8 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:packages_app/core/util/mycolor.dart';
 
-enum OtpFiledShape { circular, underscore, square }
+enum OtpFiledShape { underscore, square }
 
 class OtpField extends StatefulWidget {
   const OtpField({
@@ -20,8 +22,8 @@ class OtpField extends StatefulWidget {
     this.errorFillColor = MyColor.cardBackgroundColor,
     this.shadowElevation = 0,
     this.shodowColor = Colors.transparent,
-    this.hideText = true,
-    this.otpFiledShape = OtpFiledShape.circular,
+    this.hideText = false,
+    this.otpFiledShape = OtpFiledShape.square,
   });
   final int length;
   final Function(String val) onSubmit;
@@ -105,22 +107,6 @@ class _OtpFieldState extends State<OtpField> {
         borderSide: BorderSide(
             color: widget.errorBorderColor, width: widget.errorBorderWidth),
       );
-    } else if (widget.otpFiledShape == OtpFiledShape.circular) {
-      _selectedFocusBorder = OutlineInputBorder(
-        borderRadius: BorderRadius.circular(60),
-        borderSide: BorderSide(
-            color: widget.focusBorderColor, width: widget.focusBorderWidth),
-      );
-      _selectedUnFocusBorder = OutlineInputBorder(
-        borderRadius: BorderRadius.circular(60),
-        borderSide: BorderSide(
-            color: widget.unFocusBorderColor, width: widget.unFocusBorderWidth),
-      );
-      _selectedErrorBorder = OutlineInputBorder(
-        borderRadius: BorderRadius.circular(60),
-        borderSide: BorderSide(
-            color: widget.errorBorderColor, width: widget.errorBorderWidth),
-      );
     } else {
       _selectedFocusBorder = UnderlineInputBorder(
         borderSide: BorderSide(
@@ -151,6 +137,7 @@ class _OtpFieldState extends State<OtpField> {
               child: Padding(
                 padding: EdgeInsets.only(right: isLastItem ? 0 : 8),
                 child: _getOtpField(
+                  currentIndex: i,
                   cntrl: _otpControllerList[i],
                   currentFocus: _otpFocusList[i],
                   // if it's last otp-field then we don't need nextFocus
@@ -177,7 +164,8 @@ class _OtpFieldState extends State<OtpField> {
   }
 
   Widget _getOtpField(
-      {required TextEditingController cntrl,
+      {required int currentIndex,
+      required TextEditingController cntrl,
       required FocusNode currentFocus,
       FocusNode? nextFocus}) {
     return Material(
@@ -205,6 +193,8 @@ class _OtpFieldState extends State<OtpField> {
           focusedErrorBorder: _selectedErrorBorder,
           errorStyle: const TextStyle(height: 0),
         ),
+        onSaved: (_) => _onSubmit(),
+        onFieldSubmitted: (_) => _onSubmit(),
         onChanged: (val) {
           if (val.isEmpty) {
             // if we remove a OTP-text, we may wanna stay on the same field, so doing nothing
@@ -228,8 +218,36 @@ class _OtpFieldState extends State<OtpField> {
           FocusManager.instance.primaryFocus?.unfocus();
           _onSubmit();
         },
+        contextMenuBuilder: (context, editableTextState) {
+          return AdaptiveTextSelectionToolbar(
+            anchors: editableTextState.contextMenuAnchors,
+            children: [
+              TextSelectionToolbarTextButton(
+                padding: EdgeInsets.all(10),
+                onPressed: () => _onPasteCode(currentIndex),
+                child: const Text('Paste'),
+              ),
+              TextSelectionToolbarTextButton(
+                padding: EdgeInsets.all(10),
+                onPressed: () => FocusManager.instance.primaryFocus?.unfocus(),
+                child: const Text('Cancel'),
+              ),
+            ],
+          );
+        },
       ),
     );
+  }
+
+  void _onPasteCode(int currentIndex) {
+    Clipboard.getData('text/plain').then((value) {
+      if (value != null && value.text != null && value.text!.isNotEmpty) {
+        for (int i = 0; (i < widget.length) && (i < value.text!.length); i++) {
+          _otpControllerList[currentIndex + i].text = value.text![i];
+        }
+      }
+      FocusManager.instance.primaryFocus?.unfocus();
+    });
   }
 
   @override
