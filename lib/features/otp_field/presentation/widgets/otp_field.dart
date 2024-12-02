@@ -23,7 +23,7 @@ class OtpField extends StatefulWidget {
       this.shadowElevation = 0,
       this.shodowColor = Colors.transparent,
       this.hideText = false,
-      this.otpFiledShape = OtpFiledShape.square});
+      this.otpFiledShape = OtpFiledShape.circular});
   final int length;
   final Function(String val) onSubmit;
   final double borderRadius;
@@ -109,6 +109,7 @@ class _OtpFieldState extends State<OtpField> {
       if (_isShapeCircular) setState(() => _isShapeCircularError = true);
       return;
     }
+    _isShapeCircularError = false;
     String confirmedOTP = '';
     for (int i = 0; i < widget.length; i++) {
       confirmedOTP = [confirmedOTP, _otpControllerList[i].text].join();
@@ -121,7 +122,7 @@ class _OtpFieldState extends State<OtpField> {
       required TextEditingController cntrl,
       required FocusNode currentFocus,
       FocusNode? nextFocus}) {
-    return Material(
+    final child = Material(
       elevation: widget.shadowElevation,
       color: Colors.transparent,
       clipBehavior: Clip.none,
@@ -138,7 +139,25 @@ class _OtpFieldState extends State<OtpField> {
               ),
             )
           : null,
-      child: TextFormField(
+      child: Center(
+        child: _getTextField(
+          currentIndex: currentIndex,
+          cntrl: cntrl,
+          currentFocus: currentFocus,
+          nextFocus: nextFocus,
+        ),
+      ),
+    );
+    if (_isShapeCircularError) return SizedBox(height: 60, child: child);
+    return child;
+  }
+
+  TextFormField _getTextField(
+          {required int currentIndex,
+          required TextEditingController cntrl,
+          required FocusNode currentFocus,
+          FocusNode? nextFocus}) =>
+      TextFormField(
         controller: cntrl,
         focusNode: currentFocus,
         obscureText: widget.hideText, obscuringCharacter: "✶",
@@ -200,9 +219,7 @@ class _OtpFieldState extends State<OtpField> {
             ],
           );
         },
-      ),
-    );
-  }
+      );
 
   void _defineShapeOfTheField() {
     if (widget.otpFiledShape == OtpFiledShape.square) {
