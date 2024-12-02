@@ -1,32 +1,32 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:packages_app/core/util/mycolor.dart';
 
-enum OtpFiledShape { underscore, square }
+enum OtpFiledShape { underscore, square, circular }
 
 class OtpField extends StatefulWidget {
-  const OtpField({
-    super.key,
-    required this.length,
-    required this.onSubmit,
-    this.focusBorderWidth = .7,
-    this.focusBorderColor = MyColor.skyPrimary,
-    this.focusFillColor = MyColor.cardBackgroundColor,
-    this.unFocusBorderWidth = .3,
-    this.unFocusBorderColor = MyColor.inActiveColor,
-    this.unFocusFillColor = MyColor.cardBackgroundColor,
-    this.errorBorderWidth = 1,
-    this.errorBorderColor = Colors.red,
-    this.errorFillColor = MyColor.cardBackgroundColor,
-    this.shadowElevation = 0,
-    this.shodowColor = Colors.transparent,
-    this.hideText = false,
-    this.otpFiledShape = OtpFiledShape.square,
-  });
+  const OtpField(
+      {super.key,
+      required this.length,
+      required this.onSubmit,
+      this.borderRadius = 12,
+      this.focusBorderWidth = .7,
+      this.focusBorderColor = MyColor.skyPrimary,
+      this.focusFillColor = MyColor.cardBackgroundColor,
+      this.unFocusBorderWidth = .3,
+      this.unFocusBorderColor = MyColor.inActiveColor,
+      this.unFocusFillColor = MyColor.cardBackgroundColor,
+      this.errorBorderWidth = 1,
+      this.errorBorderColor = Colors.red,
+      this.errorFillColor = MyColor.cardBackgroundColor,
+      this.shadowElevation = 0,
+      this.shodowColor = Colors.transparent,
+      this.hideText = false,
+      this.otpFiledShape = OtpFiledShape.square});
   final int length;
   final Function(String val) onSubmit;
+  final double borderRadius;
   final double focusBorderWidth;
   final Color focusBorderColor;
   final Color focusFillColor;
@@ -49,6 +49,7 @@ class _OtpFieldState extends State<OtpField> {
   InputBorder? _selectedFocusBorder;
   InputBorder? _selectedUnFocusBorder;
   InputBorder? _selectedErrorBorder;
+  bool _isShapeCircular = false, _isShapeCircularError = false;
   final _otpController1 = TextEditingController();
   final _otpController2 = TextEditingController();
   final _otpController3 = TextEditingController();
@@ -71,56 +72,7 @@ class _OtpFieldState extends State<OtpField> {
   @override
   void initState() {
     super.initState();
-    _getFieldShape();
-    _otpFocusList.add(_otpFocusNode1);
-    _otpFocusList.add(_otpFocusNode2);
-    _otpFocusList.add(_otpFocusNode3);
-    _otpFocusList.add(_otpFocusNode4);
-    _otpFocusList.add(_otpFocusNode5);
-    _otpFocusList.add(_otpFocusNode6);
-    _otpFocusList.add(_otpFocusNode7);
-    _otpFocusList.add(_otpFocusNode8);
-    _otpControllerList.add(_otpController1);
-    _otpControllerList.add(_otpController2);
-    _otpControllerList.add(_otpController3);
-    _otpControllerList.add(_otpController4);
-    _otpControllerList.add(_otpController5);
-    _otpControllerList.add(_otpController6);
-    _otpControllerList.add(_otpController7);
-    _otpControllerList.add(_otpController8);
-  }
-
-  void _getFieldShape() {
-    if (widget.otpFiledShape == OtpFiledShape.square) {
-      _selectedFocusBorder = OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(12)),
-        borderSide: BorderSide(
-            color: widget.focusBorderColor, width: widget.focusBorderWidth),
-      );
-      _selectedUnFocusBorder = OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(12)),
-        borderSide: BorderSide(
-            color: widget.unFocusBorderColor, width: widget.unFocusBorderWidth),
-      );
-      _selectedErrorBorder = OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(12)),
-        borderSide: BorderSide(
-            color: widget.errorBorderColor, width: widget.errorBorderWidth),
-      );
-    } else {
-      _selectedFocusBorder = UnderlineInputBorder(
-        borderSide: BorderSide(
-            color: widget.focusBorderColor, width: widget.focusBorderWidth),
-      );
-      _selectedUnFocusBorder = UnderlineInputBorder(
-        borderSide: BorderSide(
-            color: widget.unFocusBorderColor, width: widget.unFocusBorderWidth),
-      );
-      _selectedErrorBorder = UnderlineInputBorder(
-        borderSide: BorderSide(
-            color: widget.errorBorderColor, width: widget.errorBorderWidth),
-      );
-    }
+    _defineShapeOfTheField();
   }
 
   @override
@@ -154,6 +106,7 @@ class _OtpFieldState extends State<OtpField> {
   void _onSubmit() {
     if (!_formKey.currentState!.validate()) {
       widget.onSubmit("");
+      if (_isShapeCircular) setState(() => _isShapeCircularError = true);
       return;
     }
     String confirmedOTP = '';
@@ -173,6 +126,18 @@ class _OtpFieldState extends State<OtpField> {
       color: Colors.transparent,
       clipBehavior: Clip.none,
       shadowColor: widget.shodowColor,
+      shape: _isShapeCircular
+          ? CircleBorder(
+              side: BorderSide(
+                color: _isShapeCircularError
+                    ? widget.errorBorderColor
+                    : widget.focusBorderColor,
+                width: _isShapeCircularError
+                    ? widget.errorBorderWidth
+                    : widget.focusBorderWidth,
+              ),
+            )
+          : null,
       child: TextFormField(
         controller: cntrl,
         focusNode: currentFocus,
@@ -185,8 +150,8 @@ class _OtpFieldState extends State<OtpField> {
         // setiing maximum length of each field is 1
         inputFormatters: [LengthLimitingTextInputFormatter(1)],
         decoration: InputDecoration(
+          fillColor: Colors.transparent,
           contentPadding: EdgeInsets.symmetric(vertical: 20),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           focusedBorder: _selectedFocusBorder,
           enabledBorder: _selectedUnFocusBorder,
           errorBorder: _selectedErrorBorder,
@@ -239,6 +204,51 @@ class _OtpFieldState extends State<OtpField> {
     );
   }
 
+  void _defineShapeOfTheField() {
+    if (widget.otpFiledShape == OtpFiledShape.square) {
+      _selectedFocusBorder =
+          _getInputBorder(widget.focusBorderColor, widget.focusBorderWidth);
+      _selectedUnFocusBorder =
+          _getInputBorder(widget.unFocusBorderColor, widget.unFocusBorderWidth);
+      _selectedErrorBorder =
+          _getInputBorder(widget.errorBorderColor, widget.errorBorderWidth);
+    } else if (widget.otpFiledShape == OtpFiledShape.underscore) {
+      _selectedFocusBorder = _getInputBorder(
+          widget.focusBorderColor, widget.focusBorderWidth,
+          isUnderLine: true);
+      _selectedUnFocusBorder = _getInputBorder(
+          widget.unFocusBorderColor, widget.unFocusBorderWidth,
+          isUnderLine: true);
+      _selectedErrorBorder = _getInputBorder(
+          widget.errorBorderColor, widget.errorBorderWidth,
+          isUnderLine: true);
+    } else {
+      _isShapeCircular = true;
+      _selectedFocusBorder =
+          _getInputBorder(Colors.transparent, widget.focusBorderWidth);
+      _selectedUnFocusBorder =
+          _getInputBorder(Colors.transparent, widget.unFocusBorderWidth);
+      _selectedErrorBorder =
+          _getInputBorder(Colors.transparent, widget.errorBorderWidth);
+    }
+    _otpFocusList.add(_otpFocusNode1);
+    _otpFocusList.add(_otpFocusNode2);
+    _otpFocusList.add(_otpFocusNode3);
+    _otpFocusList.add(_otpFocusNode4);
+    _otpFocusList.add(_otpFocusNode5);
+    _otpFocusList.add(_otpFocusNode6);
+    _otpFocusList.add(_otpFocusNode7);
+    _otpFocusList.add(_otpFocusNode8);
+    _otpControllerList.add(_otpController1);
+    _otpControllerList.add(_otpController2);
+    _otpControllerList.add(_otpController3);
+    _otpControllerList.add(_otpController4);
+    _otpControllerList.add(_otpController5);
+    _otpControllerList.add(_otpController6);
+    _otpControllerList.add(_otpController7);
+    _otpControllerList.add(_otpController8);
+  }
+
   void _onPasteCode(int currentIndex) {
     Clipboard.getData('text/plain').then((value) {
       if (value != null && value.text != null && value.text!.isNotEmpty) {
@@ -249,6 +259,17 @@ class _OtpFieldState extends State<OtpField> {
       FocusManager.instance.primaryFocus?.unfocus();
     });
   }
+
+  InputBorder _getInputBorder(Color color, double width,
+          {bool isUnderLine = false}) =>
+      isUnderLine
+          ? UnderlineInputBorder(
+              borderSide: BorderSide(color: color, width: width))
+          : OutlineInputBorder(
+              borderRadius:
+                  BorderRadius.all(Radius.circular(widget.borderRadius)),
+              borderSide: BorderSide(color: color, width: width),
+            );
 
   @override
   void dispose() {
