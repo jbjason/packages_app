@@ -14,19 +14,15 @@ class ShimmerLoadingScreen extends StatelessWidget {
       appBar: MyDimens().getNormalAppBar("Shimmer Loading", [], context, true),
       body: SafeArea(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(height: 300, color: MyColor.skyPrimary),
-            ShimmerloadingCard(
+            ShimmerloadingPremium(
               itemHeight: 95,
               length: 4,
               itemSeparateHeightWidth: 20,
-              heightLightColor: Colors.greenAccent,
-              secondaryColor: Colors.green,
               scrollDirection: Axis.vertical,
               child: _getChild(size),
             ),
-
-            // Container(height: 300, color: MyColor.skyPrimary),
           ],
         ),
       ),
@@ -76,8 +72,14 @@ class ShimmerLoadingScreen extends StatelessWidget {
       );
 }
 
-class ShimmerloadingCard extends StatefulWidget {
-  const ShimmerloadingCard(
+class Shimmerloading {
+  Widget _getTitle() {
+    return Container();
+  }
+}
+
+class ShimmerloadingPremium extends StatefulWidget {
+  const ShimmerloadingPremium(
       {super.key,
       required this.child,
       required this.itemHeight,
@@ -98,10 +100,10 @@ class ShimmerloadingCard extends StatefulWidget {
   final Axis scrollDirection;
   final Duration duration;
   @override
-  State<ShimmerloadingCard> createState() => _ShimmerloadingCardState();
+  State<ShimmerloadingPremium> createState() => _ShimmerloadingPremiumState();
 }
 
-class _ShimmerloadingCardState extends State<ShimmerloadingCard>
+class _ShimmerloadingPremiumState extends State<ShimmerloadingPremium>
     with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Color?> _colorAnimation;
@@ -130,10 +132,7 @@ class _ShimmerloadingCardState extends State<ShimmerloadingCard>
   @override
   Widget build(BuildContext context) {
     return _isVerticalScroll
-        ? SingleChildScrollView(
-            child: Column(
-                children: List.generate(widget.length, (i) => _getShimmeritem)),
-          )
+        ? Column(children: List.generate(widget.length, (i) => _getShimmeritem))
         : SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
@@ -149,6 +148,7 @@ class _ShimmerloadingCardState extends State<ShimmerloadingCard>
           right: _isVerticalScroll ? 0 : widget.itemSeparateHeightWidth,
         ),
         child: Stack(
+          clipBehavior: Clip.hardEdge,
           children: [
             widget.child,
             Positioned(
