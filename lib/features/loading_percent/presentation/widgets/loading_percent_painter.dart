@@ -1,6 +1,4 @@
-// ignore_for_file: depend_on_referenced_packages
 import 'package:flutter/material.dart';
-import 'package:packages_app/core/util/mycolor.dart';
 import 'package:vector_math/vector_math_64.dart' as math;
 import 'dart:math';
 
@@ -8,13 +6,13 @@ class LoadingPercentPainter extends CustomPainter {
   final double strokeWidth;
   final double circleRadius;
   final double loadingPercent;
-  final Color backColor;
+  final Color inActiveTrackColor;
   final List<Color> indicatorGradientColor;
   const LoadingPercentPainter({
     required this.strokeWidth,
     required this.circleRadius,
     required this.loadingPercent,
-    this.backColor = MyColor.inActiveColor,
+    required this.inActiveTrackColor,
     required this.indicatorGradientColor,
   });
 
@@ -29,7 +27,7 @@ class LoadingPercentPainter extends CustomPainter {
     final paint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
-      ..color = backColor
+      ..color = inActiveTrackColor
       ..strokeWidth = strokeWidth;
     canvas.drawArc(rect, math.radians(270), math.radians(360), false, paint);
 

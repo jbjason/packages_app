@@ -38,9 +38,11 @@ class Home extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => LoadingPercentScreen()));
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => LoadingPercentScreen(
+                            type: LoadingPercentType.horizontal)),
+                  );
                 },
                 child: Text("Loading Percent Package"),
               ),

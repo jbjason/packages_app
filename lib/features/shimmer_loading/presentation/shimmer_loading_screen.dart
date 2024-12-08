@@ -84,7 +84,7 @@ class ShimmerloadingPremium extends StatefulWidget {
       required this.child,
       required this.itemHeight,
       this.itemWidth,
-      this.heightLightColor = Colors.white,
+      this.highlightColor = Colors.white,
       this.secondaryColor = Colors.white38,
       this.length = 1,
       this.itemSeparateHeightWidth = 0,
@@ -93,7 +93,7 @@ class ShimmerloadingPremium extends StatefulWidget {
   final Widget child;
   final double itemHeight;
   final double? itemWidth;
-  final Color heightLightColor;
+  final Color highlightColor;
   final Color secondaryColor;
   final int length;
   final double itemSeparateHeightWidth;
@@ -117,7 +117,7 @@ class _ShimmerloadingPremiumState extends State<ShimmerloadingPremium>
     //WidgetsBinding.instance.addPostFrameCallback((_) => _getSize());
     _controller = AnimationController(vsync: this, duration: widget.duration);
     _colorAnimation =
-        ColorTween(begin: widget.heightLightColor, end: widget.secondaryColor)
+        ColorTween(begin: widget.highlightColor, end: widget.secondaryColor)
             .animate(_controller);
     _controller.repeat();
   }
