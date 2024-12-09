@@ -39,9 +39,7 @@ class Home extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (_) => LoadingPercentScreen(
-                            type: LoadingPercentType.horizontal)),
+                    MaterialPageRoute(builder: (_) => LoadingPercentScreen()),
                   );
                 },
                 child: Text("Loading Percent Package"),
