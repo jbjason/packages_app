@@ -112,7 +112,7 @@ class StraightLinePercentIndicator extends StatelessWidget {
     required this.type,
     required this.height,
     required this.width,
-    this.borderRadius = 0,
+    this.borderRadius = 8,
     required this.loadingPercent,
     required this.viewLoadingPercent,
     required this.showLoadingPercent,
