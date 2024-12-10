@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:packages_app/core/util/mycolor.dart';
 import 'package:packages_app/core/util/mydimens.dart';
@@ -17,13 +18,12 @@ class _LoadingPercentScreenState extends State<LoadingPercentScreen>
   void initState() {
     super.initState();
     _controller = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 1000));
+        vsync: this, duration: const Duration(milliseconds: 3000));
     if (mounted) _controller.repeat();
   }
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: MyDimens().getNormalAppBar("Loading Percent", [], context, true),
       body: AnimatedBuilder(
@@ -37,29 +37,13 @@ class _LoadingPercentScreenState extends State<LoadingPercentScreen>
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(height: 20),
-                  HorizontalPercentIndicator(
-                    height: 30,
-                    width: size.width,
-                    loadingPercent: _controller.value,
-                  ),
+                  HorizontalPercentIndicator(loadingPercent: _controller.value),
                   const SizedBox(height: 20),
-                  VerticalPercentIndicator(
-                    height: 120,
-                    width: 30,
-                    loadingPercent: _controller.value,
-                  ),
+                  VerticalPercentIndicator(loadingPercent: _controller.value),
                   const SizedBox(height: 20),
-                  CircularPercentIndicator(
-                    height: size.height * .28,
-                    width: size.height * .28,
-                    loadingPercent: _controller.value,
-                  ),
+                  CircularPercentIndicator(loadingPercent: _controller.value),
                   const SizedBox(height: 20),
-                  SquarePercentIndicator(
-                    height: 60,
-                    width: 60,
-                    loadingPercent: _controller.value,
-                  ),
+                  SquarePercentIndicator(loadingPercent: _controller.value),
                 ],
               ),
             ),
@@ -79,23 +63,25 @@ class _LoadingPercentScreenState extends State<LoadingPercentScreen>
 class HorizontalPercentIndicator extends StatelessWidget {
   const HorizontalPercentIndicator({
     super.key,
-    required this.height,
-    required this.width,
+    this.height = 30,
+    this.width,
     this.borderRadius = 8,
     required this.loadingPercent,
-    this.showLoadingPercent = true,
     this.inactiveTrackColor = MyColor.inActiveColor,
+    this.child,
     this.activeTrackColor = const [MyColor.skyPrimary, MyColor.skySecondary],
   });
   final double height;
-  final double width;
+  final double? width;
   final double borderRadius;
   final double loadingPercent;
-  final bool showLoadingPercent;
   final Color inactiveTrackColor;
+  final Widget? child;
   final List<Color> activeTrackColor;
   @override
   Widget build(BuildContext context) {
+    final view = PlatformDispatcher.instance.views.first;
+    final widthNow = width ?? view.physicalSize.width / view.devicePixelRatio;
     return Container(
       height: height,
       width: width,
@@ -103,28 +89,24 @@ class HorizontalPercentIndicator extends StatelessWidget {
         borderRadius: BorderRadius.circular(borderRadius),
         color: inactiveTrackColor,
       ),
-      child: Stack(
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Container(
-              height: height,
-              width: _getPercent(width, loadingPercent),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(borderRadius),
-                gradient: LinearGradient(colors: activeTrackColor),
-              ),
-            ),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Container(
+          height: height,
+          width: _getPercent(widthNow, loadingPercent),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(borderRadius),
+            gradient: LinearGradient(colors: activeTrackColor),
           ),
-          if (showLoadingPercent)
-            Center(
-              child: Text(
-                _getExactPercent,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.bold),
+          child: child ??
+              Center(
+                child: Text(
+                  _getExactPercent,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
               ),
-            ),
-        ],
+        ),
       ),
     );
   }
@@ -141,20 +123,20 @@ class HorizontalPercentIndicator extends StatelessWidget {
 class VerticalPercentIndicator extends StatelessWidget {
   const VerticalPercentIndicator({
     super.key,
-    required this.height,
-    required this.width,
+    this.height = 120,
+    this.width = 30,
     this.borderRadius = 8,
     required this.loadingPercent,
-    this.showLoadingPercent = true,
     this.inactiveTrackColor = MyColor.inActiveColor,
+    this.child,
     this.activeTrackColor = const [MyColor.skyPrimary, MyColor.skySecondary],
   });
   final double height;
   final double width;
   final double borderRadius;
   final double loadingPercent;
-  final bool showLoadingPercent;
   final Color inactiveTrackColor;
+  final Widget? child;
   final List<Color> activeTrackColor;
   @override
   Widget build(BuildContext context) {
@@ -165,28 +147,24 @@ class VerticalPercentIndicator extends StatelessWidget {
         borderRadius: BorderRadius.circular(borderRadius),
         color: inactiveTrackColor,
       ),
-      child: Stack(
-        children: [
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              height: _getPercent(height, loadingPercent),
-              width: width,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(borderRadius),
-                gradient: LinearGradient(colors: activeTrackColor),
-              ),
-            ),
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: Container(
+          height: _getPercent(height, loadingPercent),
+          width: width,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(borderRadius),
+            gradient: LinearGradient(colors: activeTrackColor),
           ),
-          if (showLoadingPercent)
-            Center(
-              child: Text(
-                _getExactPercent,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.bold),
+          child: child ??
+              Center(
+                child: Text(
+                  _getExactPercent,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
               ),
-            ),
-        ],
+        ),
       ),
     );
   }
@@ -200,83 +178,14 @@ class VerticalPercentIndicator extends StatelessWidget {
   String get _getExactPercent => "${_getPercent(100, loadingPercent).toInt()}%";
 }
 
-// class StraightLinePercentIndicator extends StatelessWidget {
-//   const StraightLinePercentIndicator({
-//     super.key,
-//     required this.type,
-//     required this.height,
-//     required this.width,
-//     this.borderRadius = 8,
-//     required this.loadingPercent,
-//     required this.viewLoadingPercent,
-//     required this.showLoadingPercent,
-//     this.inactiveTrackColor = MyColor.inActiveColor,
-//     this.activeTrackColor = const [MyColor.skyPrimary, MyColor.skySecondary],
-//   });
-//   final LoadingPercentType type;
-//   final double height;
-//   final double width;
-//   final double borderRadius;
-//   final double loadingPercent;
-//   final String viewLoadingPercent;
-//   final bool showLoadingPercent;
-//   final Color inactiveTrackColor;
-//   final List<Color> activeTrackColor;
-//   @override
-//   Widget build(BuildContext context) {
-//     bool isHorizontal = type == LoadingPercentType.horizontal;
-//     final indicatorHeightPercent =
-//         isHorizontal ? height : _getPercent(height, loadingPercent);
-//     final indicatorWidthPercent =
-//         isHorizontal ? _getPercent(width, loadingPercent) : width;
-//     final indicatorAlignment =
-//         isHorizontal ? Alignment.centerLeft : Alignment.bottomCenter;
-//     return Container(
-//       height: height,
-//       width: width,
-//       decoration: BoxDecoration(
-//         borderRadius: BorderRadius.circular(borderRadius),
-//         color: inactiveTrackColor,
-//       ),
-//       child: Stack(
-//         children: [
-//           Align(
-//             alignment: indicatorAlignment,
-//             child: Container(
-//               height: indicatorHeightPercent,
-//               width: indicatorWidthPercent,
-//               decoration: BoxDecoration(
-//                 borderRadius: BorderRadius.circular(borderRadius),
-//                 gradient: LinearGradient(colors: activeTrackColor),
-//               ),
-//             ),
-//           ),
-//           if (showLoadingPercent)
-//             Center(
-//               child: Text(
-//                 viewLoadingPercent,
-//                 textAlign: TextAlign.center,
-//                 style: TextStyle(fontWeight: FontWeight.bold),
-//               ),
-//             ),
-//         ],
-//       ),
-//     );
-//   }
-//   double _getPercent(double width, double loadingPercent) {
-//     if (loadingPercent > 1) return width;
-//     if (loadingPercent < 0) return 0;
-//     return width * loadingPercent;
-//   }
-// }
-
 class CircularPercentIndicator extends StatelessWidget {
   const CircularPercentIndicator({
     super.key,
-    required this.height,
-    required this.width,
+    this.height = 150,
+    this.width = 150,
     required this.loadingPercent,
     this.inActiveTrackColor = MyColor.inActiveColor,
+    this.child,
     this.activeTrackColor = const [
       Colors.deepOrangeAccent,
       Colors.greenAccent,
@@ -288,6 +197,7 @@ class CircularPercentIndicator extends StatelessWidget {
   final double width;
   final double loadingPercent;
   final Color inActiveTrackColor;
+  final Widget? child;
   final List<Color> activeTrackColor;
 
   @override
@@ -303,7 +213,7 @@ class CircularPercentIndicator extends StatelessWidget {
           inActiveTrackColor: inActiveTrackColor,
           indicatorGradientColor: _getGradientColor,
         ),
-        child: Center(child: Text(_getExactPercent)),
+        child: child ?? Center(child: Text(_getExactPercent)),
       ),
     );
   }
@@ -330,18 +240,20 @@ class CircularPercentIndicator extends StatelessWidget {
 class SquarePercentIndicator extends StatelessWidget {
   const SquarePercentIndicator(
       {super.key,
-      required this.height,
-      required this.width,
+      this.height = 150,
+      this.width = 150,
       required this.loadingPercent,
       this.borderRadius = 12,
       this.indicatorColor = MyColor.skyPrimary,
-      this.backColor = MyColor.inActiveColor});
+      this.backColor = MyColor.inActiveColor,
+      this.child});
   final double height;
   final double width;
   final double loadingPercent;
   final double borderRadius;
   final Color indicatorColor;
   final Color backColor;
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {
@@ -363,7 +275,7 @@ class SquarePercentIndicator extends StatelessWidget {
               borderRadius: BorderRadius.circular(borderRadius),
               color: Colors.white,
             ),
-            child: Center(child: Text(_getExactPercent)),
+            child: child ?? Center(child: Text(_getExactPercent)),
           ),
         ),
       ],
