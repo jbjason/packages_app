@@ -7,3 +7,5 @@ enum NavigateFrom { home, doctor }
 enum NumberVerificationType { login, signup, accountdelete, completeSignUp }
 
 enum ShowBottomSheetType { onlyLive, onlySchedule, all }
+
+enum LanguageType { english, bangla, spanish }

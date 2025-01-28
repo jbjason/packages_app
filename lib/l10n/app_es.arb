@@ -1,0 +1,11 @@
+{
+    "pageTitleHome":"Hogar",
+    "pageTitleShimmer":"Pantalla brillante",
+    "pageTitleOTPField":"Pantalla de campo OTP",
+    "pageTitleLoadingPercent":"Pantalla de porcentaje de carga",
+    "pageTitleNaitveFeature":"Pantalla de funciones nativas",
+    "shimmerLoading":"Paquete de carga Shimmer",
+    "otpField":"Paquete de carga OTP",
+    "loadingPercent":"Paquete de porcentaje de carga",
+    "nativeFeature":"Paquete de funciones nativas"
+}

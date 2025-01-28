@@ -1,0 +1,12 @@
+{   
+    "pageTitleHome":"Home",
+    "pageTitleShimmer":"Shimmer Screen",
+    "pageTitleOTPField":"OTP Field Screen",
+    "pageTitleLoadingPercent":"Loading Percent Screen",
+    "pageTitleNaitveFeature":"Native Feature Screen",
+
+    "shimmerLoading":"Shimmer package",
+    "otpField":"OTP Field Package",
+    "loadingPercent":"Loading Percent Package",
+    "nativeFeature":"Native Feature Package"
+}

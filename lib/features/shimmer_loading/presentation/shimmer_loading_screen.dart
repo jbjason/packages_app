@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:packages_app/core/util/mycolor.dart';
 import 'package:packages_app/core/util/mydimens.dart';
 import 'package:vector_math/vector_math_64.dart' as degree;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ShimmerLoadingScreen extends StatelessWidget {
   const ShimmerLoadingScreen({super.key});
@@ -10,8 +11,10 @@ class ShimmerLoadingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final local = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: MyDimens().getNormalAppBar("Shimmer Loading", [], context, true),
+      appBar:
+          MyDimens().getNormalAppBar(local.pageTitleShimmer, [], context, true),
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -70,12 +73,6 @@ class ShimmerLoadingScreen extends StatelessWidget {
           ],
         ),
       );
-}
-
-class Shimmerloading {
-  Widget _getTitle() {
-    return Container();
-  }
 }
 
 class ShimmerloadingPremium extends StatefulWidget {

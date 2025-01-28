@@ -9,4 +9,8 @@ class MyConstant {
   static const poppinsMedium = 'Poppins_Medium';
   static const poppinsBold = 'Poppins_Bold';
   static const poppinsBlack = 'Poppins_Black';
+
+  static const String englishLocal = 'en';
+  static const String banglaLocal = 'bn';
+  static const String spanishLocal = 'es';
 }

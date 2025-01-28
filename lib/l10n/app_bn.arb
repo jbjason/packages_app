@@ -1,0 +1,11 @@
+{
+    "pageTitleHome":"হোম",
+    "pageTitleShimmer":"ঝিলমিল স্ক্রিন",
+    "pageTitleOTPField":"OTP ফিল্ড স্ক্রিন",
+    "pageTitleLoadingPercent":"শতাংশ লোড স্ক্রিন",
+    "pageTitleNaitveFeature":"নেটিভ ফিচার স্ক্রিন",
+    "shimmerLoading":"ঝিলমিল  প্যাকেজ",
+    "otpField":"OTP  প্যাকেজ",
+    "loadingPercent":"শতাংশ লোড প্যাকেজ",
+    "nativeFeature":"নেটিভ ফিচার প্যাকেজ"
+}

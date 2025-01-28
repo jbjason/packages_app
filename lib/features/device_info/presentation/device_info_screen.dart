@@ -4,14 +4,17 @@ import 'package:packages_app/core/util/mydimens.dart';
 import 'package:packages_app/features/device_info/data/data_sources/device_info_source.dart';
 import 'package:packages_app/features/device_info/presentation/providers/device_info_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DeviceInfoScreen extends StatelessWidget {
   const DeviceInfoScreen({super.key, required this.onSubmit});
   final Function(dynamic) onSubmit;
   @override
   Widget build(BuildContext context) {
+    final local = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: MyDimens().getNormalAppBar("Device Info", [], context, true),
+      appBar:
+          MyDimens().getNormalAppBar(local.nativeFeature, [], context, true),
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

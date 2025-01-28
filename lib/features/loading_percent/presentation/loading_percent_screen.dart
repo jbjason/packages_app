@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:packages_app/core/util/mycolor.dart';
 import 'package:packages_app/core/util/mydimens.dart';
 import 'package:packages_app/features/loading_percent/presentation/widgets/loading_percent_painter.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoadingPercentScreen extends StatefulWidget {
   const LoadingPercentScreen({super.key});
@@ -24,8 +25,10 @@ class _LoadingPercentScreenState extends State<LoadingPercentScreen>
 
   @override
   Widget build(BuildContext context) {
+    final local = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: MyDimens().getNormalAppBar("Loading Percent", [], context, true),
+      appBar: MyDimens()
+          .getNormalAppBar(local.pageTitleLoadingPercent, [], context, true),
       body: AnimatedBuilder(
         animation: _controller,
         builder: (context, _) => SafeArea(
